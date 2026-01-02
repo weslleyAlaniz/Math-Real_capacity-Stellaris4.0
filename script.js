@@ -9,6 +9,7 @@ const populationInput = document.getElementById('population');
 const maxDistrictsInput = document.getElementById('max-districts');
 const maxHousingInput = document.getElementById('max-housing');
 const calculateBtn = document.getElementById('calculate-btn');
+const showCapacityToggle = document.getElementById('show-capacity-toggle');
 
 // Função para calcular o crescimento logístico
 function calculateGrowthRate(pops, realCapacity) {
@@ -29,6 +30,7 @@ function generateHeatmap() {
     const pops = parseInt(populationInput.value);
     const maxFreeDistricts = parseInt(maxDistrictsInput.value);
     const maxExtraHousing = parseInt(maxHousingInput.value);
+    const showCapacity = showCapacityToggle.checked;
     
     // Validação
     if (isNaN(pops) || pops < 1) {
@@ -91,24 +93,18 @@ function generateHeatmap() {
         colorscale: colorscale,
         zmin: LOGISTIC_GROWTH_FLOOR,
         zmax: LOGISTIC_GROWTH_CEILING,
-        text: zText,
-        texttemplate: '%{text}',
-        textfont: {
-            size: 10,
-            color: '#000000',
-            family: 'Arial, sans-serif'
-        },
         showscale: true,
         xgap: 1,
         ygap: 1,
         hovertemplate:
-            '<b>Distritos Livres:</b> %{x}<br>' +
+            '<b>Free Districts:</b> %{x}<br>' +
             '<b>Extra Housing:</b> %{y}<br>' +
-            '<b>Capacidade:</b> %{text}<br>' +
-            '<b>Crescimento:</b> %{z:.2f}<extra></extra>',
+            '<b>Capacity:</b> %{text}<br>' +
+            '<b>Growth:</b> %{z:.2f}<extra></extra>',
+        text: zText,
         colorbar: {
             title: {
-                text: 'Crescimento',
+                text: 'Growth',
                 font: { color: '#ffffff' }
             },
             tickfont: { color: '#ffffff' },
@@ -116,15 +112,34 @@ function generateHeatmap() {
             ticktext: ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0']
         }
     }];
-    
+
+    // Criar annotations para mostrar os valores de capacidade
+    const annotations = [];
+    if (showCapacity) {
+        for (let y = 0; y < extraHousing.length; y++) {
+            for (let x = 0; x < freeDistricts.length; x++) {
+                annotations.push({
+                    x: freeDistricts[x],
+                    y: extraHousing[y],
+                    text: zText[y][x],
+                    font: {
+                        size: 9,
+                        color: '#ffffff'
+                    },
+                    showarrow: false
+                });
+            }
+        }
+    }
+
     const layout = {
         title: {
-            text: `<b>População: ${pops}</b>`,
+            text: `<b>Population: ${pops}</b>`,
             font: { color: '#ffffff', size: 18 }
         },
         xaxis: {
             title: {
-                text: 'Distritos Livres',
+                text: 'Free Districts',
                 font: { color: '#ffffff' }
             },
             tickfont: { color: '#ffffff' },
@@ -140,7 +155,8 @@ function generateHeatmap() {
         },
         paper_bgcolor: '#2a2a2a',
         plot_bgcolor: '#2a2a2a',
-        margin: { t: 50, r: 100, b: 60, l: 80 }
+        margin: { t: 50, r: 100, b: 60, l: 80 },
+        annotations: annotations
     };
     
     const config = {
@@ -154,6 +170,25 @@ function generateHeatmap() {
 
 // Event listeners
 calculateBtn.addEventListener('click', generateHeatmap);
+
+// Calcular ao pressionar Enter nos inputs
+populationInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') generateHeatmap();
+});
+
+maxDistrictsInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') generateHeatmap();
+});
+
+maxHousingInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') generateHeatmap();
+});
+
+// Calcular ao mudar o select de tipo de planeta
+planetTypeSelect.addEventListener('change', generateHeatmap);
+
+// Recalcular ao mudar o toggle
+showCapacityToggle.addEventListener('change', generateHeatmap);
 
 // Gerar gráfico inicial ao carregar a página
 document.addEventListener('DOMContentLoaded', generateHeatmap);

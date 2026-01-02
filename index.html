@@ -3,49 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Capacidade - Stellaris</title>
+    <title>Logistic Growth Calculator - Stellaris</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora de Crescimento Logístico</h1>
+        <h1>Logistic Growth Calculator</h1>
         <h2>Stellaris</h2>
         
         <div class="form-group">
-            <label for="planet-type">Tipo de Planeta:</label>
+            <label for="planet-type">Planet Type:</label>
             <select id="planet-type">
-                <option value="400">Padrão (400)</option>
-                <option value="300">Tumba / Máquina (300)</option>
-                <option value="600">Gaia / Anel (600)</option>
+                <option value="400">Standard (400)</option>
+                <option value="300">Tomb / Machine (300)</option>
+                <option value="600">Gaia / Ring (600)</option>
             </select>
         </div>
         
         <div class="form-group">
-            <label for="population">População:</label>
+            <label for="population">Population:</label>
             <input type="number" id="population" value="3000" min="1" max="50000">
         </div>
         
         <div class="form-group">
-            <label for="max-districts">Máx. Distritos Livres:</label>
+            <label for="max-districts">Max Free Districts:</label>
             <input type="number" id="max-districts" value="10" min="1" max="50">
         </div>
         
         <div class="form-group">
-            <label for="max-housing">Máx. Extra Housing:</label>
+            <label for="max-housing">Max Extra Housing:</label>
             <input type="number" id="max-housing" value="8000" min="500" max="20000" step="500">
         </div>
         
-        <button id="calculate-btn">Calcular</button>
+        <button id="calculate-btn">Calculate</button>
+        
+        <div class="toggle-container">
+            <label class="toggle-label">
+                <input type="checkbox" id="show-capacity-toggle">
+                <span>Show capacity values</span>
+            </label>
+        </div>
         
         <div class="info-box">
-            <p><strong>Para crescimento máximo de 5:</strong></p>
-            <p>Capacidade necessária: 8000 | População ideal: 4000</p>
+            <p><strong>For maximum growth of 5:</strong></p>
+            <p>Required capacity: 8000 | Ideal population: 4000</p>
         </div>
         
         <div id="heatmap"></div>
     </div>
     
-    <script src="index.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
